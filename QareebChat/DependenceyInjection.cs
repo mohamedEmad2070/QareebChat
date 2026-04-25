@@ -4,12 +4,15 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using QareebChat.Authentication;
 using QareebChat.Entities;
 using QareebChat.Persistence;
 using QareebChat.Services.Auth;
+using QareebChat.Services.Mail;
+using QareebChat.Settings;
 using System.Reflection;
 using System.Text;
 
@@ -26,6 +29,10 @@ public static class DependenceyInjection
             options.UseSqlServer(connectionString));
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IEmailSender, EmailService>();
+
+        services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
 
         services.AddControllers();
         services.AddSwaggerConfiguration();
