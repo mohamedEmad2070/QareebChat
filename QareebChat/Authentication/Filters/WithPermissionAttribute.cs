@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Freeqy_APIs.Authentication.Filters;
+namespace QareebChat.Authentication.Filters;
 
 public class WithPermissionAttribute(string permission) : AuthorizeAttribute(permission)
 {
