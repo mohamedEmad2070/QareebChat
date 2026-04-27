@@ -13,6 +13,9 @@ public static class UserErrors
     public static readonly Error DuplicateEmail = new("Users.DuplicateEmail", "Email is already registered.", StatusCodes.Status400BadRequest);
     public static readonly Error DuplicateUserName = new("Users.DuplicateUserName", "Username is already taken.", StatusCodes.Status400BadRequest);
     public static readonly Error DuplicateEmailConfirmed = new("Users.DuplicateEmailConfirmed", "Email is already confirmed.", StatusCodes.Status400BadRequest);
-        public static readonly Error InvalidCode = new("Users.InvalidCode", "Invalid confirmation code.", StatusCodes.Status400BadRequest);
-        public static readonly Error IsConfirmedBefore = new("Users.IsConfirmedBefore", "Email is already confirmed.", StatusCodes.Status400BadRequest);
-    }
+    public static readonly Error InvalidCode = new("Users.InvalidCode", "Invalid confirmation code.", StatusCodes.Status400BadRequest);
+    public static readonly Error IsConfirmedBefore = new("Users.IsConfirmedBefore", "Email is already confirmed.", StatusCodes.Status400BadRequest);
+    public static readonly Error UserNotFound = new("Users.UserNotFound", "User not found.", StatusCodes.Status404NotFound);
+    public static readonly Error InvalidCurrentPassword = new("Users.InvalidCurrentPassword", "Current password is incorrect.", StatusCodes.Status400BadRequest);
+    public static readonly Error SamePassword = new("Users.SamePassword", "New password must be different from current password.", StatusCodes.Status400BadRequest);
+}
