@@ -12,6 +12,7 @@ using QareebChat.Entities;
 using QareebChat.Persistence;
 using QareebChat.Services.Auth;
 using QareebChat.Services.Mail;
+using QareebChat.Services.User;
 using QareebChat.Settings;
 using System.Reflection;
 using System.Text;
@@ -29,6 +30,7 @@ public static class DependenceyInjection
             options.UseSqlServer(connectionString));
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IEmailSender, EmailService>();
 
