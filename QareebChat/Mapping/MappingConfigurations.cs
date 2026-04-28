@@ -13,6 +13,7 @@ public class MappingConfigurations : IRegister
 			.Map(dest => dest.FirstName, src => src.FirstName)
 			.Map(dest => dest.LastName, src => src.LastName)
 			.Map(dest => dest.UserName, src => src.UserName)
-			.Map(dest => dest.Email, src => src.Email);
+			.Map(dest => dest.Email, src => src.Email)
+			.Map(dest => dest.ProfilePictureUrl, src => src.ProfilePictureUrl);
 	}
 }
