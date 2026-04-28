@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using QareebChat.Abstractions;
+using QareebChat.Abstractions.Consts;
 
 namespace QareebChat.Errors;
 
@@ -18,4 +19,7 @@ public static class UserErrors
     public static readonly Error UserNotFound = new("Users.UserNotFound", "User not found.", StatusCodes.Status404NotFound);
     public static readonly Error InvalidCurrentPassword = new("Users.InvalidCurrentPassword", "Current password is incorrect.", StatusCodes.Status400BadRequest);
     public static readonly Error SamePassword = new("Users.SamePassword", "New password must be different from current password.", StatusCodes.Status400BadRequest);
+    public static readonly Error InvalidImageExtension = new("Users.InvalidImageExtension", $"Only {string.Join(", ", FileSettings.AllowedExtensions)} files are allowed.", StatusCodes.Status400BadRequest);
+    public static readonly Error FileSizeExceeded = new("Users.FileSizeExceeded", $"File size must not exceed {FileSettings.MaxFileSizeInMB}MB.", StatusCodes.Status400BadRequest);
+    public static readonly Error NoFileUploaded = new("Users.NoFileUploaded", "Please upload a file.", StatusCodes.Status400BadRequest);
 }

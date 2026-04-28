@@ -52,4 +52,19 @@ public class UserController(IUserService userService) : ControllerBase
 
         return result.IsSuccess ? NoContent() : result.ToProblem();
     }
+
+    [HttpPut("profile-picture")]
+    public async Task<IActionResult> UploadProfilePicture(IFormFile file, CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _userService.UploadProfilePictureAsync(userId, file, cancellationToken);
+
+        return result.IsSuccess
+            ? Ok(new { ProfilePictureUrl = result.Value })
+            : result.ToProblem();
+    }
 }

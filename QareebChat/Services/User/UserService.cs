@@ -2,15 +2,18 @@ using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QareebChat.Abstractions;
+using QareebChat.Abstractions.Consts;
 using QareebChat.Contracts.User;
 using QareebChat.Entities;
 using QareebChat.Errors;
+using QareebChat.Services.FileService;
 
 namespace QareebChat.Services.User;
 
-public class UserService(UserManager<ApplicationUser> userManager) : IUserService
+public class UserService(UserManager<ApplicationUser> userManager, IFileService fileService) : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly IFileService _fileService = fileService;
 
     public async Task<Result<GetProfileResponse>> GetProfileAsync(string userId, CancellationToken cancellationToken = default)
     {
@@ -83,5 +86,42 @@ public class UserService(UserManager<ApplicationUser> userManager) : IUserServic
 
         var error = result.Errors.First();
         return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
+    }
+
+    public async Task<Result<string>> UploadProfilePictureAsync(string userId, IFormFile file, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
+            return Result.Failure<string>(UserErrors.UserNotFound);
+
+        // Validate file presence
+        if (file is null || file.Length == 0)
+            return Result.Failure<string>(UserErrors.NoFileUploaded);
+
+        // Validate extension
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!FileSettings.AllowedExtensions.Contains(extension))
+            return Result.Failure<string>(UserErrors.InvalidImageExtension);
+
+        // Validate size
+        if (file.Length > FileSettings.MaxFileSizeInBytes)
+            return Result.Failure<string>(UserErrors.FileSizeExceeded);
+
+        // Delete old picture if exists
+        _fileService.Delete(user.ProfilePictureUrl);
+
+        // Upload new picture
+        var imageUrl = await _fileService.UploadAsync(file, FileSettings.AvatarsPath, cancellationToken);
+
+        user.ProfilePictureUrl = imageUrl;
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (result.Succeeded)
+            return Result.Success(imageUrl);
+
+        var error = result.Errors.First();
+        return Result.Failure<string>(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
     }
 }

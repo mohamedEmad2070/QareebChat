@@ -11,6 +11,7 @@ using QareebChat.Authentication;
 using QareebChat.Entities;
 using QareebChat.Persistence;
 using QareebChat.Services.Auth;
+using QareebChat.Services.FileService;
 using QareebChat.Services.Mail;
 using QareebChat.Services.User;
 using QareebChat.Settings;
@@ -33,6 +34,7 @@ public static class DependenceyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IEmailSender, EmailService>();
+        services.AddScoped<IFileService, FileService>();
 
         services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
 
